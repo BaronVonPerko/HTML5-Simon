@@ -43,7 +43,8 @@ function initButtons() {
 		game.buttonHeight,
 		game.colors[0],
 		game.colorsPressed[0],
-		0);
+		0,
+		new Audio("/sounds/sound0.wav"));
 
 	game.buttons.push(button0);
 
@@ -54,7 +55,8 @@ function initButtons() {
 		game.buttonHeight,
 		game.colors[1],
 		game.colorsPressed[1],
-		1);
+		1,
+		new Audio("/sounds/sound1.wav"));
 
 	game.buttons.push(button1);
 
@@ -65,7 +67,8 @@ function initButtons() {
 		game.buttonHeight,
 		game.colors[2],
 		game.colorsPressed[2],
-		2);
+		2,
+		new Audio("/sounds/sound2.wav"));
 
 	game.buttons.push(button2);
 
@@ -76,7 +79,8 @@ function initButtons() {
 		game.buttonHeight,
 		game.colors[3],
 		game.colorsPressed[3],
-		3);
+		3,
+		new Audio("/sounds/sound3.wav"));
 
 	game.buttons.push(button3);
 }
@@ -154,6 +158,7 @@ function displaySequence(n) {
 		var button = game.buttons[b];
 		if (button.numberCode === code) {
 			button.lit = true;
+			button.sound.play();
 	  }
   }
 
@@ -189,7 +194,7 @@ function render() {
 
 // Game Objects
 ////////////////////////////
-game.button = function(x, y, width, height, color, colorPressed, numberCode) {
+game.button = function(x, y, width, height, color, colorPressed, numberCode, sound) {
 	this.x = x;
 	this.y = y;
 	this.width = width;
@@ -198,6 +203,7 @@ game.button = function(x, y, width, height, color, colorPressed, numberCode) {
 	this.colorPressed = colorPressed;
 	this.numberCode = numberCode;
 	this.lit = false;
+	this.sound = sound;
 
 	this.render = function() {
 		if (this.lit) {
@@ -210,6 +216,7 @@ game.button = function(x, y, width, height, color, colorPressed, numberCode) {
 		
 	this.click = function() {
 		this.lit = true;
+		this.sound.play();
 		game.inputSequence.push(this.numberCode);
 		if(game.inputSequence[game.inputSequence.length] !== game.sequence[game.inputSequence.length]) {
 			phase = 4; // game over
