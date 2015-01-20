@@ -8,6 +8,8 @@ var game = {
 	sequence: [],
 	inputSequence: [],
 	simonSpeed: 1000,
+	lastTime: 0,
+	timeElapsed: 0,
 	phase: 1 // phase 1 = simon, phase 2 = displaying sequence, phase 3 = player's turn, phase 4 = game over
 };
 
@@ -99,15 +101,22 @@ function mouseHandler(x, y) {
 }
 
 
-function gameLoop() {
+function gameLoop(now) {
 	update();
 	render();
+	
+	game.timeElapsed = now - game.lastTime;
+	game.lastTime = now;
 
 	requestAnimationFrame(gameLoop);
 }
 
 
 function update() {
+	for(var b in game.buttons) {
+		game.buttons[b].update();
+	}
+		
 	if(game.phase === 4) {
 		return; // game is over, no more update
 	}	
@@ -117,11 +126,7 @@ function update() {
 	}
 	
 	if(game.phase === 3) {
-			setTimeout(function() {
-					for(var b in game.buttons) {
-						game.buttons[b].lit = false;
-					}
-			}, 250);
+		
 	}
 		
 	if(game.inputSequence.length === game.sequence.length) {
@@ -133,7 +138,7 @@ function update() {
 
 function simonPhase() {
 	generateNextColor();	
-		game.simonSpeed -= 50;
+		game.simonSpeed -= 60;
 		if(game.simonSpeed < 400) {
 				game.simonSpeed = 400;
 		}
@@ -204,6 +209,7 @@ game.button = function(x, y, width, height, color, colorPressed, numberCode, sou
 	this.numberCode = numberCode;
 	this.lit = false;
 	this.sound = sound;
+	this.lightTimer = 0;
 
 	this.render = function() {
 		if (this.lit) {
@@ -213,6 +219,18 @@ game.button = function(x, y, width, height, color, colorPressed, numberCode, sou
 		}
 		game.context.fillRect(this.x, this.y, this.width, this.height);
 	};
+	
+	this.update = function() {
+		if(this.lit && (isNaN(this.lightTimer) || this.lightTimer <= 0)) {
+			this.lightTimer = 250;
+		}
+		
+		this.lightTimer = this.lightTimer - game.timeElapsed;
+		
+		if(this.lightTimer <= 0) {
+			this.lit = false;
+		}
+	}
 		
 	this.click = function() {
 		this.lit = true;
