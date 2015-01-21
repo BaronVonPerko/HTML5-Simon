@@ -130,7 +130,6 @@ function update() {
 	}
 	
 	if (game.phase === 1) {
-		console.log("game.phase === 1");
 		simonPhase();
 	}
 	
@@ -141,7 +140,6 @@ function update() {
 	if(game.inputSequence.length === game.sequence.length) {
 		game.phase = 1; // simon's turn
 		game.inputSequence = [];
-		console.log('simon\'s turn');
 	}
 }
 
@@ -167,7 +165,6 @@ function displaySequence() {
   	
 	if(game.displaySequenceIndex === game.sequence.length) {
 		game.phase = 3;
-		console.log('player turn');
 		return;
 	}
   	
