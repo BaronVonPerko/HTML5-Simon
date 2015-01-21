@@ -1,3 +1,28 @@
+// Simon
+
+
+
+/* Game Phases
+ * ------------------------------
+ *
+ * Phase 0 - Main Menu screen
+ * |
+ * |
+ * |_ Phase 1 - Simon's Turn
+ *   |
+ *   |
+ *   |_ Phase 2 - Display Sequence
+ *     |
+ *     |
+ *     |_ Phase 3 - Player's Turn - if correct, go to Phase 1, else Phase 4
+ *       |
+ *       |
+ *       |_ Phase 4 - Game Over
+ *
+ */
+
+
+
 // Main Game Object
 var game = {
 	width: 650,
@@ -14,7 +39,7 @@ var game = {
 	displaySequenceIndex: 0,
 	lastTime: 0,
 	timeElapsed: 0,
-	phase: 1 // phase 1 = simon, phase 2 = displaying sequence, phase 3 = player's turn, phase 4 = game over
+	phase: 1
 };
 
 
@@ -244,7 +269,7 @@ game.button = function(x, y, width, height, color, colorPressed, numberCode, sou
 		this.sound.play();
 		game.inputSequence.push(this.numberCode);
 		if(game.inputSequence[game.inputSequence.length] !== game.sequence[game.inputSequence.length]) {
-			phase = 4; // game over
+			game.phase = 4; // game over
 			console.log('game over');
 		}
 	};
