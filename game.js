@@ -8,6 +8,10 @@ var game = {
 	sequence: [],
 	inputSequence: [],
 	simonSpeed: 1000,
+	minSimonSpeed: 300,
+	simonSpeedDelta: 95,
+	timer: 0,
+	displaySequenceIndex: 0,
 	lastTime: 0,
 	timeElapsed: 0,
 	phase: 1 // phase 1 = simon, phase 2 = displaying sequence, phase 3 = player's turn, phase 4 = game over
@@ -121,7 +125,12 @@ function update() {
 		return; // game is over, no more update
 	}	
 	
+	if(game.phase === 2) {
+		displaySequence();
+	}
+	
 	if (game.phase === 1) {
+		console.log("game.phase === 1");
 		simonPhase();
 	}
 	
@@ -138,47 +147,48 @@ function update() {
 
 function simonPhase() {
 	generateNextColor();	
-		game.simonSpeed -= 60;
-		if(game.simonSpeed < 400) {
-				game.simonSpeed = 400;
-		}
-	setTimeout(function() {displaySequence();}, game.simonSpeed);
+	game.simonSpeed -= game.simonSpeedDelta;
+	if(game.simonSpeed < game.minSimonSpeed) {
+		game.simonSpeed = game.minSimonSpeed;
+	}
+	
+	game.phase = 2;
+	displaySequence();
 }
 
 function generateNextColor() {
 	var code = Math.floor((Math.random() * 4));
 	game.sequence.push(code);
 	game.phase = 2;
+	game.displaySequenceIndex = 0;
 }
 
-function displaySequence(n) {
-	var code;
-	if(n === undefined) { n = 0; }
+function displaySequence() {
+  	
+	if(game.displaySequenceIndex === game.sequence.length) {
+		game.phase = 3;
+		console.log('player turn');
+		return;
+	}
+  	
+	if(game.timer <= 0) {
+		game.timer = game.simonSpeed;
 		
-	code = game.sequence[n];
-	console.log('lighting ' + code);
-		
-	// light up the button that matches the code in the sequence
-	for (var b in game.buttons) {
-		var button = game.buttons[b];
-		if (button.numberCode === code) {
-			button.lit = true;
-			button.sound.play();
-	  }
-  }
-
-	// light up the next in the sequence
-	setTimeout(function() {
 		unlightAll();
 		
-		if(n < game.sequence.length-1) {
-			setTimeout(function() {displaySequence(n+1);}, 100); // allow the buttons to un-light in case of same color back to back
-		}
-		else {
-			game.phase = 3;
-			console.log('player turn');
-		}
-	}, game.simonSpeed);
+		// light up the button that matches the code in the sequence
+		var code = game.sequence[game.displaySequenceIndex];
+		for (var b in game.buttons) {
+			var button = game.buttons[b];
+			if (button.numberCode === code) {
+				button.lit = true;
+				button.sound.play();
+		  }
+	  }
+	  
+	  game.displaySequenceIndex++;
+	}
+	game.timer = game.timer - game.timeElapsed;
 }
 
 function unlightAll() {
