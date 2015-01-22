@@ -134,10 +134,11 @@ function initButtons() {
 }
 
 function mouseHandler(x, y) {
-	if(game.phase !== 3) {
-		return;  // no mouse input if not the player's turn
+	
+	if(game.phase !== 3 && game.phase !== 0) {
+		return;  // no mouse input if not the player's turn or the main menu
 	}
-		
+	
 	for(var b in game.buttons) {
 		var btn = game.buttons[b];
 		if(x > btn.x && x < btn.x + btn.width && y > btn.y && y < btn.y + btn.height) {
@@ -166,16 +167,19 @@ function update() {
 	// Main Menu
 	if (game.phase === 0) {
 		// todo menu
+		return;
 	}
 	
 	// Simon's Turn
 	if (game.phase === 1) {
 		simonPhase();
+		return;
 	}
 		
 	// Display the Sequence
 	if(game.phase === 2) {
 		displaySequence();
+		return;
 	}
 		
 	// Player's Turn
@@ -313,6 +317,13 @@ game.button = function(x, y, width, height, color, colorPressed, numberCode, sou
 	};
 		
 	this.click = function() {
+		if(this.isStart && game.phase !== 0) {
+			return;
+		}
+		if(!this.isStart && game.phase === 0) {
+			return;
+		}
+		
 		this.lit = true;
 		this.sound.play();
 		game.inputSequence.push(this.numberCode);
@@ -322,6 +333,10 @@ game.button = function(x, y, width, height, color, colorPressed, numberCode, sou
 		}
 		else {
 			game.timer = game.defaultUserTimeout; // reset the timer
+		}
+		
+		if(this.isStart) {
+			game.phase = 1; // start the game
 		}
 	};
 };
