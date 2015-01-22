@@ -22,7 +22,6 @@
  */
 
 
-
 // Main Game Object
 var game = {
 	width: 650,
