@@ -147,18 +147,22 @@ function update() {
 		game.buttons[b].update();
 	}
 		
-	if(game.phase === 4) {
-		return; // game is over, no more update
-	}	
-	
-	if(game.phase === 2) {
-		displaySequence();
+	// Main Menu
+	if (game.phase === 0) {
+		// todo menu
 	}
 	
+	// Simon's Turn
 	if (game.phase === 1) {
 		simonPhase();
 	}
-	
+		
+	// Display the Sequence
+	if(game.phase === 2) {
+		displaySequence();
+	}
+		
+	// Player's Turn
 	if(game.phase === 3) {
 		game.timer = game.timer - game.timeElapsed;
 		if(game.timer <= 0) {
@@ -166,6 +170,20 @@ function update() {
 			console.log('game over, out of time');
 		}
 	}
+	
+	// Game Over
+	if(game.phase === 4) {
+		// todo game over screen
+			
+		var currHigh = localStorage.getItem('highScore');
+		if(currHigh === undefined || currHigh < game.sequence.length-1) {
+			localStorage.setItem('highScore', game.sequence.length-1);
+		}
+			
+		console.log('high score : ' + localStorage.getItem('highScore'));
+		return; 
+	}	
+	
 		
 	if(game.inputSequence.length === game.sequence.length) {
 		game.phase = 1; // simon's turn
