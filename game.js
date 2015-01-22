@@ -43,6 +43,7 @@ var game = {
 
 
 
+
 function init() {
 	// setup the canvas and context
 	game.canvas = document.getElementById("game_canvas");
