@@ -35,6 +35,7 @@ var game = {
 	minSimonSpeed: 300,
 	simonSpeedDelta: 95,
 	timer: 0,
+	defaultUserTimeout: 2000, // user has 2 seconds for each color, or game over
 	displaySequenceIndex: 0,
 	lastTime: 0,
 	timeElapsed: 0,
@@ -159,7 +160,11 @@ function update() {
 	}
 	
 	if(game.phase === 3) {
-		
+		game.timer = game.timer - game.timeElapsed;
+		if(game.timer <= 0) {
+			game.phase = 4; // game over!
+			console.log('game over, out of time');
+		}
 	}
 		
 	if(game.inputSequence.length === game.sequence.length) {
@@ -190,6 +195,7 @@ function displaySequence() {
   	
 	if(game.displaySequenceIndex === game.sequence.length) {
 		game.phase = 3;
+		game.timer = game.defaultUserTimeout; // start the timer
 		return;
 	}
   	
@@ -262,15 +268,18 @@ game.button = function(x, y, width, height, color, colorPressed, numberCode, sou
 		if(this.lightTimer <= 0) {
 			this.lit = false;
 		}
-	}
+	};
 		
 	this.click = function() {
 		this.lit = true;
 		this.sound.play();
 		game.inputSequence.push(this.numberCode);
-		if(game.inputSequence[game.inputSequence.length] !== game.sequence[game.inputSequence.length]) {
+		if(game.inputSequence[game.inputSequence.length-1] !== game.sequence[game.inputSequence.length-1]) {
 			game.phase = 4; // game over
-			console.log('game over');
+			console.log('game over - wrong color');
+		}
+		else {
+			game.timer = game.defaultUserTimeout; // reset the timer
 		}
 	};
 };
