@@ -26,8 +26,8 @@
 var game = {
 	width: 650,
 	height: 350,
-	colors: ['#660000', '#006600', '#000066', '#660066'],
-	colorsPressed: ['#ff0000', '#00ff00', '#0000ff', '#ff00ff'],
+	colors: ['#660000', '#006600', '#000066', '#660066', '#aad740'],
+	colorsPressed: ['#ff0000', '#00ff00', '#0000ff', '#ff00ff', '#EFFA40'],
 	buttons: [],
 	sequence: [],
 	inputSequence: [],
@@ -39,7 +39,7 @@ var game = {
 	displaySequenceIndex: 0,
 	lastTime: 0,
 	timeElapsed: 0,
-	phase: 1
+	phase: 0
 };
 
 
@@ -76,7 +76,8 @@ function initButtons() {
 		game.colors[0],
 		game.colorsPressed[0],
 		0,
-		new Audio("/sounds/sound0.wav"));
+		new Audio("/sounds/sound0.wav"),
+		false);
 
 	game.buttons.push(button0);
 
@@ -88,7 +89,8 @@ function initButtons() {
 		game.colors[1],
 		game.colorsPressed[1],
 		1,
-		new Audio("/sounds/sound1.wav"));
+		new Audio("/sounds/sound1.wav"),
+		false);
 
 	game.buttons.push(button1);
 
@@ -100,7 +102,8 @@ function initButtons() {
 		game.colors[2],
 		game.colorsPressed[2],
 		2,
-		new Audio("/sounds/sound2.wav"));
+		new Audio("/sounds/sound2.wav"),
+		false);
 
 	game.buttons.push(button2);
 
@@ -112,9 +115,22 @@ function initButtons() {
 		game.colors[3],
 		game.colorsPressed[3],
 		3,
-		new Audio("/sounds/sound3.wav"));
+		new Audio("/sounds/sound3.wav"),
+		false);
 
 	game.buttons.push(button3);
+	
+	var startButton = new game.button(
+		game.width/2 - game.buttonWidth / 4,
+		game.height/2 - game.buttonHeight / 4,
+		game.buttonWidth / 2,
+		game.buttonHeight / 2,
+		game.colors[4],
+		game.colorsPressed[4],
+		4,
+		new Audio("/sounds/gameStart.wav"),
+		true);
+	game.buttons.push(startButton);
 }
 
 function mouseHandler(x, y) {
@@ -255,7 +271,7 @@ function render() {
 
 // Game Objects
 ////////////////////////////
-game.button = function(x, y, width, height, color, colorPressed, numberCode, sound) {
+game.button = function(x, y, width, height, color, colorPressed, numberCode, sound, isStart) {
 	this.x = x;
 	this.y = y;
 	this.width = width;
@@ -266,6 +282,7 @@ game.button = function(x, y, width, height, color, colorPressed, numberCode, sou
 	this.lit = false;
 	this.sound = sound;
 	this.lightTimer = 0;
+	this.isStart = isStart;
 
 	this.render = function() {
 		if (this.lit) {
@@ -273,7 +290,14 @@ game.button = function(x, y, width, height, color, colorPressed, numberCode, sou
 		} else {
 			game.context.fillStyle = this.color;
 		}
-		game.context.fillRect(this.x, this.y, this.width, this.height);
+		
+		if(this.isStart) {
+			game.context.arc(this.x + this.width/2, this.y + this.height/2, this.width/2, 0, 2 * Math.PI, false);
+      		game.context.fill();
+		}
+		else {
+			game.context.fillRect(this.x, this.y, this.width, this.height);
+		}
 	};
 	
 	this.update = function() {
