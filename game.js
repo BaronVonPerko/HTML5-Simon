@@ -285,6 +285,9 @@ function render() {
 	if(game.phase === 0 || game.phase === 4) {
 		renderHighScore();
 	}
+	else {
+		renderTotalColors();
+	}
 }
 
 function renderHighScore() {
@@ -292,6 +295,13 @@ function renderHighScore() {
   	game.context.font="20px Georgia";
   	var text = "High Score: " + getHighScore();
   	game.context.fillText(text, game.canvas.width/2 - text.length*5, 35);
+}
+
+function renderTotalColors() {
+	game.context.fillStyle = "#000000";
+  	game.context.font="75px Georgia";
+  	var text = game.sequence.length.toString();
+  	game.context.fillText(text, game.canvas.width/2 - text.length*20, game.canvas.height / 2 + 20);
 }
 
 function getHighScore() {
