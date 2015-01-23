@@ -149,8 +149,8 @@ function initButtons() {
 
 function mouseHandler(x, y) {
 	
-	if(game.phase !== 3 && game.phase !== 0) {
-		return;  // no mouse input if not the player's turn or the main menu
+	if(game.phase !== 3 && game.phase !== 0 && game.phase !== 4) {
+		return;  // no mouse input if not the player's turn or the main menu/game over
 	}
 	
 	for(var b in game.buttons) {
@@ -346,12 +346,21 @@ game.button = function(x, y, width, height, color, colorPressed, numberCode, sou
 		if(this.isStart) {
 			game.context.arc(this.x + this.width/2, this.y + this.height/2, this.width/2, 0, 2 * Math.PI, false);
       		game.context.fill();
+      		
       		if(game.phase === 0) {
 	      		game.context.fillStyle = "#000000";
 	      		game.context.font="20px Georgia";
 	      		game.context.fillText("Touch to", this.x + this.width / 3.6, this.y + 10);
 	      		game.context.font="26px Georgia";
 	      		game.context.fillText("Start!", this.x + this.width/3.6 + 8, this.y + 45);
+      		}
+      		
+      		if(game.phase === 4) {
+      			game.context.fillStyle = "#000000";
+	      		game.context.font="20px Georgia";
+	      		game.context.fillText("Game Over!", this.x + this.width / 4.7, this.y + 10);
+	      		game.context.font="16px Georgia";
+	      		game.context.fillText("Touch to Retry", this.x + this.width/4.9, this.y + 45);
       		}
 		}
 		else {
