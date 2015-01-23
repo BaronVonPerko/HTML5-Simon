@@ -69,7 +69,7 @@ function init() {
 	}, false);
 	
 	// setup touch listener
-	window.addEventListener('touchstart', function(e) {
+	game.canvas.addEventListener('touchstart', function(e) {
 	    e.preventDefault();
 	    var touch = e.touches[0];
 	    mouseHandler(touch.pageX, touch.pageY);
@@ -330,7 +330,7 @@ game.button = function(x, y, width, height, color, colorPressed, numberCode, sou
 	};
 		
 	this.click = function() {
-		if(this.isStart && (game.phase !== 0 || game.phase !== 4)) {
+		if(this.isStart && game.phase !== 0 && game.phase !== 4) {
 			return;
 		}
 		if(!this.isStart && (game.phase === 0 || game.phase === 4)) {
