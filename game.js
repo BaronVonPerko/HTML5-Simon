@@ -54,6 +54,8 @@ function init() {
 	game.canvas.style.height = game.height + "px";
 
 	game.context = game.canvas.getContext("2d");
+	
+	game.gameOverSound = new Audio("/sounds/game_over.wav");
 
 	game.buttonWidth = game.width / 2;
 	game.buttonHeight = game.height / 2;
@@ -186,8 +188,7 @@ function update() {
 	if(game.phase === 3) {
 		game.timer = game.timer - game.timeElapsed;
 		if(game.timer <= 0) {
-			game.phase = 4; // game over!
-			console.log('game over, out of time');
+			gameOver();
 		}
 	}
 	
@@ -227,6 +228,11 @@ function generateNextColor() {
 	game.sequence.push(code);
 	game.phase = 2;
 	game.displaySequenceIndex = 0;
+}
+
+function gameOver() {
+	game.phase = 4;
+	game.gameOverSound.play();
 }
 
 function displaySequence() {
@@ -317,19 +323,18 @@ game.button = function(x, y, width, height, color, colorPressed, numberCode, sou
 	};
 		
 	this.click = function() {
-		if(this.isStart && game.phase !== 0) {
+		if(this.isStart && (game.phase !== 0 || game.phase !== 4)) {
 			return;
 		}
-		if(!this.isStart && game.phase === 0) {
+		if(!this.isStart && (game.phase === 0 || game.phase === 4)) {
 			return;
 		}
 		
-		this.lit = true;
-		this.sound.play();
 		game.inputSequence.push(this.numberCode);
-		if(game.inputSequence[game.inputSequence.length-1] !== game.sequence[game.inputSequence.length-1]) {
-			game.phase = 4; // game over
-			console.log('game over - wrong color');
+		if(!this.isStart 
+				&& game.inputSequence[game.inputSequence.length-1] !== game.sequence[game.inputSequence.length-1]) {
+			gameOver();
+			return;
 		}
 		else {
 			game.timer = game.defaultUserTimeout; // reset the timer
@@ -338,6 +343,9 @@ game.button = function(x, y, width, height, color, colorPressed, numberCode, sou
 		if(this.isStart) {
 			game.phase = 1; // start the game
 		}
+		
+		this.lit = true;
+		this.sound.play();
 	};
 };
 
