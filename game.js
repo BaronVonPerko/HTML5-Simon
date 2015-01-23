@@ -24,8 +24,8 @@
 
 // Main Game Object
 var game = {
-	width: 650,
-	height: 350,
+	// width: 650,
+	// height: 350,
 	colors: ['#660000', '#006600', '#000066', '#660066', '#aad740'],
 	colorsPressed: ['#ff0000', '#00ff00', '#0000ff', '#ff00ff', '#EFFA40'],
 	buttons: [],
@@ -47,18 +47,23 @@ var game = {
 
 function init() {
 	// setup the canvas and context
-	game.canvas = document.getElementById("game_canvas");
+	game.canvas = document.createElement("canvas");
+	document.body.appendChild(game.canvas);
+	// game.canvas = document.getElementById("game_canvas");
 	game.canvas.setAttribute('width', game.width);
 	game.canvas.setAttribute('height', game.height);
 	game.canvas.style.width = game.width + "px";
 	game.canvas.style.height = game.height + "px";
+	
+	game.canvas.width= window.innerWidth; 
+	game.canvas.height= window.innerHeight
 
 	game.context = game.canvas.getContext("2d");
 	
 	game.gameOverSound = new Audio("/sounds/game_over.wav");
 
-	game.buttonWidth = game.width / 2;
-	game.buttonHeight = game.height / 2;
+	game.buttonWidth = game.canvas.width / 2;
+	game.buttonHeight = game.canvas.height / 2;
 
 	initButtons();
 
@@ -130,10 +135,10 @@ function initButtons() {
 	game.buttons.push(button3);
 	
 	var startButton = new game.button(
-		game.width/2 - game.buttonWidth / 4,
-		game.height/2 - game.buttonHeight / 4,
-		game.buttonWidth / 2,
-		game.buttonHeight / 2,
+		game.canvas.width/2 - game.buttonWidth / 8,
+		game.canvas.height/2 - game.buttonHeight / 8,
+		game.buttonWidth / 4,
+		game.buttonHeight / 4,
 		game.colors[4],
 		game.colorsPressed[4],
 		4,
