@@ -212,7 +212,6 @@ function update() {
 		return; 
 	}	
 	
-		
 	if(game.inputSequence.length === game.sequence.length) {
 		game.phase = 1; // simon's turn
 		game.inputSequence = [];
@@ -349,6 +348,8 @@ game.button = function(x, y, width, height, color, colorPressed, numberCode, sou
 		
 		if(this.isStart) {
 			game.phase = 1; // start the game
+			game.sequence = [];
+			game.inputSequence = [];
 		}
 		
 		this.lit = true;
