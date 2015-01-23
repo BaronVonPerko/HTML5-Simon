@@ -208,12 +208,7 @@ function update() {
 	if(game.phase === 4) {
 		// todo game over screen
 			
-		var currHigh = localStorage.getItem('highScore');
-		if(currHigh === undefined || currHigh < game.sequence.length-1) {
-			localStorage.setItem('highScore', game.sequence.length-1);
-		}
-			
-		console.log('high score : ' + localStorage.getItem('highScore'));
+		setHighScore();
 		return; 
 	}	
 	
@@ -286,6 +281,32 @@ function render() {
 	for (var b in game.buttons) {
 		game.buttons[b].render();
 	}
+	
+	if(game.phase === 0 || game.phase === 4) {
+		renderHighScore();
+	}
+}
+
+function renderHighScore() {
+	game.context.fillStyle = "#ffffff";
+  	game.context.font="20px Georgia";
+  	var text = "High Score: " + getHighScore();
+  	game.context.fillText(text, game.canvas.width/2 - text.length*5, 35);
+}
+
+function getHighScore() {
+	var score = localStorage.getItem('highScore');
+	if(score === undefined) {
+		return 0;
+	}
+	else return score;
+}
+
+function setHighScore() {
+	var currHigh = localStorage.getItem('highScore');
+	if(currHigh === undefined || currHigh < game.sequence.length-1) {
+		localStorage.setItem('highScore', game.sequence.length-1);
+	}
 }
 
 
@@ -315,6 +336,13 @@ game.button = function(x, y, width, height, color, colorPressed, numberCode, sou
 		if(this.isStart) {
 			game.context.arc(this.x + this.width/2, this.y + this.height/2, this.width/2, 0, 2 * Math.PI, false);
       		game.context.fill();
+      		if(game.phase === 0) {
+	      		game.context.fillStyle = "#000000";
+	      		game.context.font="20px Georgia";
+	      		game.context.fillText("Touch to", this.x + this.width / 3.6, this.y + 10);
+	      		game.context.font="26px Georgia";
+	      		game.context.fillText("Start!", this.x + this.width/3.6 + 8, this.y + 45);
+      		}
 		}
 		else {
 			game.context.fillRect(this.x, this.y, this.width, this.height);
