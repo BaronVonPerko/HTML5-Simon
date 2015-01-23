@@ -67,6 +67,13 @@ function init() {
 		var rect = game.canvas.getBoundingClientRect();
 		mouseHandler(evt.clientX - rect.left, evt.clientY - rect.top);
 	}, false);
+	
+	// setup touch listener
+	window.addEventListener('touchstart', function(e) {
+	    e.preventDefault();
+	    var touch = e.touches[0];
+	    mouseHandler(touch.pageX, touch.pageY);
+	}, false);
 }
 
 function initButtons() {
